@@ -22,22 +22,22 @@ function UserTripCardItem({ trip }) {
     };
 
     return (
-        <Link to={"/view-trip/"+trip?.id}>
-        <div className="border border-gray-200 rounded-lg shadow-lg overflow-hidden mb-4 hover:scale-105 transition-all hover:shadow-md">
-            <div className="w-full h-48 bg-gray-200 flex items-center justify-center">
-                <img
-                    src={photoURL}
-                    alt={trip?.userSelection?.location?.label}
-                    className="w-full h-full object-cover"
-                />
+        <Link to={"/view-trip/" + trip?.id}>
+            <div className="border border-gray-200 rounded-lg shadow-lg overflow-hidden mb-4 hover:scale-105 transition-all hover:shadow-md w-full max-w-xs">
+                <div className="w-full h-48 bg-gray-200 flex items-center justify-center">
+                    <img
+                        src={photoURL}
+                        alt={trip?.userSelection?.location?.label}
+                        className="w-full h-full object-cover"
+                    />
+                </div>
+                <div className="p-4">
+                    <h2 className="font-bold text-lg truncate">{trip?.userSelection?.location?.label}</h2>
+                    <h2 className="text-sm text-gray-500">
+                        {trip?.userSelection?.numberOfDays} Days trip with {trip?.userSelection?.budget} Budget
+                    </h2>
+                </div>
             </div>
-            <div className="p-4">
-                <h2 className="font-bold text-lg">{trip?.userSelection?.location?.label}</h2>
-                <h2 className="text-sm text-gray-500">
-                    {trip?.userSelection?.numberOfDays} Days trip with {trip?.userSelection?.budget} Budget
-                </h2>
-            </div>
-        </div>
         </Link>
     );
 }
