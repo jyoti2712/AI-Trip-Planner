@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Link, useNavigate, useNavigation } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '../ui/button.jsx';
 import {
   Popover,
@@ -15,11 +15,6 @@ import {
 import { FcGoogle } from "react-icons/fc";
 import { googleLogout, useGoogleLogin } from '@react-oauth/google';
 import axios from 'axios';
-// import React from 'react';
-// import React from 'react';
-// import { FcGoogle } from 'react-icons/fc';
-// import React from 'react';
-
 
 function Navbar() {
   const user = JSON.parse(localStorage.getItem('user'));
@@ -28,7 +23,7 @@ function Navbar() {
   const login = useGoogleLogin({
     onSuccess: (codeResp) => GetUserProfile(codeResp),
     onError: (error) => console.log(error)
-  })
+  });
 
   const GetUserProfile = (tokenInfo) => {
     axios.get(`https://www.googleapis.com/oauth2/v1/userinfo?access_token=${tokenInfo.access_token}`, {
@@ -40,61 +35,60 @@ function Navbar() {
       console.log(resp);
       localStorage.setItem('user', JSON.stringify(resp.data));
       setOpenDialog(false);
-      // onGenerateTrip();
       window.location.reload();
-    })
-  }
+    });
+  };
 
   useEffect(() => {
     console.log(user);
-  }, [])
+  }, []);
+
   return (
     <div className='p-3 shadow-sm flex justify-between items-center px-5'>
       <Link to="/" className='flex items-center'>
         <img src="/logo.svg" alt="Logo" className='h-8 w-8 mr-2' />
         <span className='text-xl font-bold'>Trip Planner</span>
       </Link>
-      {user ?
+      {user ? 
         <div className='flex items-center gap-3'>
           <Button variant="outline" className="rounded-full" onClick={() => {navigate("/create-trip")}}>Create Trip</Button>
           <Button variant="outline" className="rounded-full" onClick={() => {navigate("/my-trips")}}>My Trips</Button>
 
-
           <Popover>
-            <PopoverTrigger><img src={user?.picture} className='h-[35px] w-[35px] rounded-full' /></PopoverTrigger>
-
-            <PopoverContent><h2 className="cursor-pointer" onClick={() => {
-              googleLogout();
-              localStorage.clear();
-              navigate("/");
-              window.location.reload();
-            }
-            }>Logout</h2></PopoverContent>
+            <PopoverTrigger>
+              <img 
+                src={user?.picture} 
+                className='w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 rounded-full' 
+                alt="User Profile" 
+              />
+            </PopoverTrigger>
+            <PopoverContent>
+              <h2 className="cursor-pointer" onClick={() => {
+                googleLogout();
+                localStorage.clear();
+                navigate("/");
+                window.location.reload();
+              }}>Logout</h2>
+            </PopoverContent>
           </Popover>
 
-        </div> : <Button onClick={()=>{setOpenDialog(true)}}>Sign in</Button>}
+        </div> 
+        : <Button onClick={() => {setOpenDialog(true)}}>Sign in</Button>}
       <Dialog open={OpenDialog} onOpenChange={(isOpen) => setOpenDialog(isOpen)}>
-                <DialogContent>
-                    <DialogHeader className="relative">
-                        <DialogDescription>
-                            <img src="/logo.svg" alt="Logo" />
-                            <h2 className="font-bold text-lg mt-2">Sign in with Google</h2>
-                            <p>Sign in to the App with Google Authentication Securely</p>
-                            <Button onClick={login} className="w-full mt-2">
-                                <FcGoogle />
-                                Sign in
-                            </Button>
-                        </DialogDescription>
-                        {/* Close Icon */}
-                        {/* <IoMdClose
-                            onClick={() => setOpenDialog(false)}
-                            // className="absolute top-2 right-2 cursor-pointer text-gray-500"
-                            // size={24}
-                        /> */}
-                    </DialogHeader>
-                </DialogContent>
-            </Dialog>
-
+        <DialogContent>
+          <DialogHeader className="relative">
+            <DialogDescription>
+              <img src="/logo.svg" alt="Logo" />
+              <h2 className="font-bold text-lg mt-2">Sign in with Google</h2>
+              <p>Sign in to the App with Google Authentication Securely</p>
+              <Button onClick={login} className="w-full mt-2">
+                <FcGoogle />
+                Sign in
+              </Button>
+            </DialogDescription>
+          </DialogHeader>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
