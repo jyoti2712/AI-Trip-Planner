@@ -1,17 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '../ui/button.jsx';
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover"
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-} from "@/components/ui/dialog"
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Dialog, DialogContent, DialogDescription, DialogHeader } from "@/components/ui/dialog";
 import { FcGoogle } from "react-icons/fc";
 import { googleLogout, useGoogleLogin } from '@react-oauth/google';
 import axios from 'axios';
@@ -51,9 +42,22 @@ function Navbar() {
       </Link>
       {user ? 
         <div className='flex items-center gap-3'>
-          <Button variant="outline" className="rounded-full" onClick={() => {navigate("/create-trip")}}>Create Trip</Button>
-          <Button variant="outline" className="rounded-full" onClick={() => {navigate("/my-trips")}}>My Trips</Button>
+          <Button
+            variant="outline"
+            className="rounded-full text-sm sm:text-base py-2 px-4 sm:px-6"
+            onClick={() => { navigate("/create-trip") }}
+          >
+            Create Trip
+          </Button>
+          <Button
+            variant="outline"
+            className="rounded-full text-sm sm:text-base py-2 px-4 sm:px-6"
+            onClick={() => { navigate("/my-trips") }}
+          >
+            My Trips
+          </Button>
 
+          {/* Popover for Profile and Logout */}
           <Popover>
             <PopoverTrigger>
               <img 
@@ -62,18 +66,34 @@ function Navbar() {
                 alt="User Profile" 
               />
             </PopoverTrigger>
-            <PopoverContent>
-              <h2 className="cursor-pointer" onClick={() => {
-                googleLogout();
-                localStorage.clear();
-                navigate("/");
-                window.location.reload();
-              }}>Logout</h2>
+            <PopoverContent className="p-2 rounded-md shadow-lg bg-white w-40">
+              <div className="flex flex-col items-start space-y-2">
+                <h2 className="text-md font-semibold text-gray-700">Profile</h2>
+                <button
+                  onClick={() => {
+                    googleLogout();
+                    localStorage.clear();
+                    navigate("/");
+                    window.location.reload();
+                  }}
+                  className="text-sm text-red-500 hover:bg-red-100 w-full py-2 px-3 rounded-md hover:text-red-700"
+                >
+                  Logout
+                </button>
+              </div>
             </PopoverContent>
           </Popover>
 
         </div> 
-        : <Button onClick={() => {setOpenDialog(true)}}>Sign in</Button>}
+        : <Button 
+            onClick={() => { setOpenDialog(true) }}
+            className="text-sm sm:text-base py-2 px-4 sm:px-6"
+          >
+            Sign in
+          </Button>
+      }
+
+      {/* Dialog for Google Sign In */}
       <Dialog open={OpenDialog} onOpenChange={(isOpen) => setOpenDialog(isOpen)}>
         <DialogContent>
           <DialogHeader className="relative">
